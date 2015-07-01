@@ -1,11 +1,3 @@
-from enum import Enum
-
-class Type(Enum):
-    int = 1
-    string = 2
-    pair = 3
-    function = 4
-    void = 5
 class Scope:
     def __init__(self, oldscope = None):
         self.prev = oldscope
@@ -33,6 +25,9 @@ class Function:
         self.expressions = expressions
         self.argTypes = argTypes
         self.argNames = argNames
+class Metadata:
+    def __init__(self):
+        self.isDone = False
 # Evaluates a set of expressions, stopping at a return statement and
 # returning that value. Works if return statement is omitted
 def evaluateMultipleExpressions(metadata, scope, exprs):
@@ -78,4 +73,5 @@ def evaluate(metadata, scope, expr):
         return None
     # Operators that act on 2 elements (+, /, *, etc)
     elif expr.name == "op":
-        return expr.op(evaluate(expr.left), evaluate(expr.right))
+        return expr.op(evaluate(metadata, scope, expr.left),
+                       evaluate(metadata, scope, expr.right))
