@@ -60,9 +60,9 @@ def evaluate(metadata, scope, expr):
         return evaluateFunctionCall(metadata, scope, expr.func, expr.args)
     elif expr.name == "return":
         metadata.isDone = True
-        return evaluate(expr.expression)
+        return evaluate(metadata, scope, expr.expression)
     elif expr.name == "if":
-        if evaluate(expr.condition):
+        if evaluate(metadata, scope, expr.condition):
             return evaluateMultipleExpressions(metadata, scope, expr.ifExpressions)
         else:
             return evaluateMultipleExpressions(metadata, scope, expr.elseExpressions)

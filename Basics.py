@@ -1,6 +1,9 @@
 from Block import *
 import Block
-
+def val(literal):
+    res = Expression("value")
+    res.value = literal
+    return res
 a = Expression("var")
 a.varName = "a"
 b = Expression("var")
@@ -33,3 +36,16 @@ fnCall.func = "add"
 fnCall.args = [1, 2]
 metadata = Metadata()
 print evaluate(metadata, scope, fnCall)
+
+v1 = val(13)
+v2 = val(17)
+gt = Expression("op")
+gt.op = lambda x, y: x > y
+gt.left = v1
+gt.right = v2
+ifCond = Expression("if")
+ifCond.condition = gt
+ifCond.ifExpressions = [fnCall]
+ifCond.elseExpressions = []
+
+print evaluate(metadata, scope, ifCond)
