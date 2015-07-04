@@ -39,9 +39,6 @@ class Block(object):
             raise Exception('The block you are trying to add already has an output.')
         self._inputs[which] = block
         block._outputBlock = self
-            
-            
-            
 
     def remove(self, which):
         if which in self._inputTypes.keys():
@@ -80,7 +77,7 @@ class Block(object):
                 return (None, self._outputType)
             if blockValue is None:
                 raise Exception("You must evaluate this block's parents first.")
-        self._value = self._func(*inputValues)
+        self._value = self._func(*map(lambda (block, val): val, inputValues))
         if (not self._outputBlock is None):
             return self._outputBlock.evaluate()
         else:
