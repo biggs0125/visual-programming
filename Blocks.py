@@ -45,6 +45,9 @@ class Block(object):
     def getValue(self):
         return self._value
 
+    def missingArgs(self):
+        return [k for k in self._inputTypes.keys() if not k in self._inputBlocks or self._inputBlocks[k] is None]
+
     def getType(self):
         types = []
         for k in self._inputTypes:
@@ -61,11 +64,11 @@ class Block(object):
         return self._outputType
 
     def evaluate(self):
+        if len(self.missingArgs()) != 0:
+            raise Exception("Not enough arguments provided")
         # Don't repeat work if we already have a value
         if self._value is not None:
             return self._value, self._outputType
-        if len(self._inputBlocks) != len(self._inputTypes):
-            raise Exception("Not enough arguments provided")
         for k in self._inputBlocks:
             val = self._inputBlocks[k]
             v, t = val.evaluate()
@@ -74,6 +77,39 @@ class Block(object):
             self._inputs[k] = v
         self._value = self._func(*(self._inputs.values()))
         return self._value, self._outputType
+
+    def collapse(self):
+        parentsCollapsed = {k: v.collapse() for k,v in self._inputBlocks.items() if not self._inputBlocks[k] is None}
+        parentsMissingArgs = [parent.missingArgs() for parent in parentsCollapsed.values()]
+        missingArgs = self.missingArgs()
+        if all([len(x) == 0 for x in parentsMissingArgs]):
+            if len(missingArgs) == 0:
+                val, valType = self.evaluate()
+                block = InputBlock()
+                block._type = valType
+                block.add(val)
+                return block
+            else:
+                block = FunctionBlock()
+                block._outputType = self.getOutputType()
+                block._inputTypes = {i: self._inputTypes[missingArgs[i]] for i in xrange(len(missingArgs))}
+                block._func = lambda *args: self._func(*[args[missingArgs.index(k)] if k in missingArgs else parentsCollapsed[k].getValue() for k in self._inputTypes.keys()])
+                return block
+        return None
+            
+        # if len(self._inputBlocks) != len(self._inputTypes):
+        #     remap = {i: missingArgs[i] for i in xrange(len(missingArgs))}
+        #     inputTypes = {k: self._inputTypes[v] for k,v in remap.items()}
+        #     parentCollapsed = 
+        #     oldInputTypes = self._inputTypes
+        #     oldInputBlocks = self._inputBlocks
+        #     newFunc = lambda *l: self._func(*[l[remap[k]] if not k in missingArgs else parentCollapsed.evaluate()[0] for k in oldInputTypes.keys()])
+        #     block = FunctionBlock()
+        #     block._outputType = self._outputType
+        #     block._inputTypes = inputTypes
+        #     block._func = newFunc
+        #     return block
+        
 
 class InputBlock(Block):
     _type = 'ARG'
