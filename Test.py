@@ -16,3 +16,4 @@ y.add(a)
 y.add(x)
 
 print y.evaluate()
+print x.evaluate()
