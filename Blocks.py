@@ -1,5 +1,4 @@
 from Closure import Closure
-import cPickle
 
 TYPES = {'INT': int, 'STR': str, 'BOOL': bool, 'LIST': list, 'SET': set, 'DICT': dict, 'ARG': 'argument', 'NONE': None}
 
@@ -66,6 +65,12 @@ class Block(object):
 
     def getFunction(self):
         return self._func
+        
+    def foldFunc(self):
+        self._func.fold()
+
+    def unfoldFunc(self):
+        self._func.unfold()
 
     def evaluate(self):
         if len(self.missingArgs()) != 0:
@@ -109,7 +114,7 @@ class Block(object):
         newInputTypes = flattenedTypes + missingArgsMapped
         block._inputTypes = {i : newInputTypes[i] for i in xrange(len(newInputTypes))}
         # Join the functions for parents needing args + our function if we need an arg.
-        block._func = lambda *args: self._func(*([parentsInfo[k]['func'](*[args[i] for i in l]) for k, l in remap.items()]+list(args[len(flattenedTypes):])))
+        block._func = Closure(lambda *args: self._func(*([parentsInfo[k]['func'](*[args[i] for i in l]) for k, l in remap.items()]+list(args[len(flattenedTypes):]))))
         return block
 
     def collapse(self):
@@ -156,6 +161,7 @@ class FunctionBlock(Block):
         if 'outputType' in kwargs.keys():
             self.outputType = kwargs['outputType']
         super(FunctionBlock, self).__init__(*args, **kwargs)
+        self._func = Closure(self._func)
         self._inputs = {i: None for i in xrange(len(self._inputTypes))} # This is the input block
 
 class StringTransformBlock(FunctionBlock):
