@@ -93,6 +93,7 @@ class Block(object):
         block = FunctionBlock()
         block._outputType = self.getOutputType()
         parentsInfo = {k: {'func': parent.getFunction(), 'inputs': parent._inputTypes} for k, parent in parentsCollapsed.items()}
+        # Get a mapping from function to parent inputs
         flattenedTypes = []
         for parentInfo in parentsInfo.values():
             flattenedTypes += [inputType for inputType in parentInfo['inputs'].values()]
@@ -102,9 +103,11 @@ class Block(object):
             klen = len(v['inputs'])
             remap[k] = xrange(ind, klen + ind)
             ind += klen
+        # if parents aren't missing args, flattenedTypes is []
         missingArgsMapped = [self._inputTypes[k] for k in missingArgs]
         newInputTypes = flattenedTypes + missingArgsMapped
         block._inputTypes = {i : newInputTypes[i] for i in xrange(len(newInputTypes))}
+        # Join the functions for parents needing args + our function if we need an arg.
         block._func = lambda *args: self._func(*([parentsInfo[k]['func'](*[args[i] for i in l]) for k, l in remap.items()]+list(args[len(flattenedTypes):])))
         return block
 
