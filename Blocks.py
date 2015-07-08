@@ -1,4 +1,5 @@
-from types import *
+from Closure import Closure
+import cPickle
 
 TYPES = {'INT': int, 'STR': str, 'BOOL': bool, 'LIST': list, 'SET': set, 'DICT': dict, 'ARG': 'argument', 'NONE': None}
 
