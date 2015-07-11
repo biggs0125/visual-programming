@@ -171,6 +171,21 @@ class SerializeTests(Tests):
     @staticmethod
     def runTests():
         print "###########Serialize Tests###############"
+        x = PlusBlock()
+        a = IntBlock()
+        b = IntBlock()
+        y = PlusBlock()
+        a.add(3)
+        b.add(4)
+        x.add(a)
+        x.add(b)
+        y.add(a)
+        y.add(x)
+        print y.evaluate()
+        y.foldFunc()
+        ystr = cPickle.dumps(y)
+        newy = cPickle.loads(ystr)
+        print newy.evaluate()
         list1 = ListBlock([1,3,5,7])
         list2 = RangeBlock(IntBlock(8))
         mod2 = ModBlock(None, IntBlock(2))
@@ -183,4 +198,4 @@ class SerializeTests(Tests):
         print odds2.evaluate()
         print "#########################################"
 
-AllTests.runTests()
+SerializeTests.runTests()

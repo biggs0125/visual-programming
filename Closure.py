@@ -9,7 +9,7 @@ class ClosureObject(object):
         
 
 class Closure(object):
-    def __init__(self, func):
+    def __init__(self, func, context = None):
         self.folded = False
         if '__builtins__' in func.func_globals:
             for k,v in func.func_globals['__builtins__'].items():
@@ -22,6 +22,7 @@ class Closure(object):
         self.func_code = marshal.dumps(func.func_code)
         self.func_name = func.func_name
         self.func_closure = func.func_closure
+        self.func_context = context
         
     def fold(self):
         if self.folded or self.func_closure is None:
@@ -32,12 +33,11 @@ class Closure(object):
             try:
                 self.func_closure.append(ClosureObject(cPickle.dumps(elem.cell_contents), True))
             except TypeError as e:
-                newDict = {}
-                for k,obj in elem.cell_contents.items():
-                    obj['func'] = Closure(obj['func'])
+                newList = []
+                for obj in elem.cell_contents:
                     obj['func'].fold()
-                newDict[k] = obj
-                self.func_closure.append(ClosureObject(newDict, False))
+                    newList.append(obj)
+                self.func_closure.append(ClosureObject(newList, False))
         self.folded = True
 
     def unfold(self):
@@ -64,4 +64,6 @@ class Closure(object):
     def __call__(self, *args):
         if self.folded:
             self.unfold()
+        if not self.func_context is None:
+            args = (self.func_context,) + args
         return new.function(marshal.loads(self.func_code), self.func_globals, self.func_name, self.func_defaults, self.func_closure)(*args)

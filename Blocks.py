@@ -1,4 +1,5 @@
 from Closure import Closure
+
 TYPES = {'INT': int, 'STR': str, 'BOOL': bool, 'LIST': list, 'SET': set, 'DICT': dict, 'ARG': 'argument', 'NONE': None, 'ANY': 'any'}
 
 class Block(object):
@@ -11,7 +12,6 @@ class Block(object):
             self._name = kwargs['name']
         else:
             self._name = self.__class__.__name__
-        self._inputs = {}
         self._inputBlocks = {}
         self._value = None
         self._collapsedCopy = None
@@ -85,30 +85,34 @@ class Block(object):
     
     def foldFunc(self):
         self._func.fold()
-
+        for block in self._inputBlocks.values():
+            if not block is None:
+                block.foldFunc()
+                
     def unfoldFunc(self):
         self._func.unfold()
 
     def evaluate(self, collapse=False):
-        if collapse or len(self.missingArgs()) != 0:
-            if collapse:
-                collapsed = self.collapse()
-                return collapsed.getFunction(), 'FUNC'
+        if collapse:
+            collapsed = self.collapse()
+            return collapsed.getFunction(), 'FUNC'
+        if len(self.missingArgs()) != 0:
             raise Exception("Not enough arguments provided")
         # Don't repeat work if we already have a value
         if self._value is not None:
             return self._value, self._outputType
+        values = {}
         for k in self._inputBlocks:
             val = self._inputBlocks[k]
             if self._inputTypes[k] == 'FUNC':
                 v,t = val.evaluate(collapse=True)
             else:
-                v,t = val.evaluate(collapse=collapse)
+                v,t = val.evaluate()
             if t != self._inputTypes[k] and not (t is 'ANY' or self._inputTypes[k] is 'ANY' or t is 'FUNC' or self._inputTypes[k] is 'FUNC'):
                 raise Exception("Argument type mismatch")
-            self._inputs[k] = v
-        self._value = self._func(*(self._inputs.values()))
-        return self._value, self._outputType
+            values[k] = v
+        self._value = self._func(*(values.values()))
+        return self._value, self.getOutputType()
 
     def collapseNoMissingArgs(self):
         val, valType = self.evaluate()
@@ -140,7 +144,8 @@ class Block(object):
         newInputTypes = flattenedTypes + missingArgsMapped
         block._inputTypes = {i : newInputTypes[i] for i in xrange(len(newInputTypes))}
         # Join the functions for parents needing args + our function if we need an arg.
-        block._func = Closure(lambda *args: self._func(*([l['func'](*[args[i] for i in xrange(l['inputsLen'][0], l['inputsLen'][1])]) for l in remap])))
+        selfFunc = self._func
+        block._func = Closure(lambda *args: selfFunc(*([l['func'](*[args[i] for i in xrange(l['inputsLen'][0], l['inputsLen'][1])]) for l in remap])))
         return block
 
     def collapse(self):
@@ -155,7 +160,6 @@ class Block(object):
                 self._collapsedCopy = self.collapseNoMissingArgs()
                 self._collapsedCopyMissingArgs = missingArgs
                 return self._collapsedCopy
-                
         self._collapsedCopy = self.collapseWithMissingArgs(missingArgs, parentsCollapsed)
         self._collapsedCopyMissingArgs = missingArgs
         return self._collapsedCopy
@@ -166,6 +170,7 @@ class InputBlock(Block):
 
     def __init__(self, *args, **kwargs):
         self._outputType = 'ARG'
+        self._func = Closure(self._func, self)
         if 'argType' in kwargs.keys():
             self._type = kwargs['argType']
         super(InputBlock, self).__init__(*args, **kwargs)
@@ -184,4 +189,3 @@ class FunctionBlock(Block):
             self.outputType = kwargs['outputType']
         super(FunctionBlock, self).__init__(*args, **kwargs)
         self._func = Closure(self._func)
-        self._inputs = {i: None for i in xrange(len(self._inputTypes))} # This is the input block
