@@ -1,8 +1,8 @@
-from MathBlocks import *
-from StringBlocks import *
-from InputBlocks import *
-from ListBlocks import *
-from MiscBlocks import *
+from blocksystem.MathBlocks import *
+from blocksystem.StringBlocks import *
+from blocksystem.InputBlocks import *
+from blocksystem.ListBlocks import *
+from blocksystem.MiscBlocks import *
 
 MAPPING = {
     'PLUS': PlusBlock,
