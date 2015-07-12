@@ -18,7 +18,7 @@ class AllTests(Tests):
         CollapseTests.runTests()
         LogicTests.runTests()
         ListTests.runTests()
-#        SerializeTests.runTests()
+        SerializeTests.runTests()
 
 class CollapseTests(Tests):
     @staticmethod
@@ -198,4 +198,4 @@ class SerializeTests(Tests):
         print odds2.evaluate()
         print "#########################################"
 
-SerializeTests.runTests()
+AllTests.runTests()

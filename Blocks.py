@@ -15,7 +15,7 @@ class Block(object):
         self._inputBlocks = {}
         self._value = None
         self._collapsedCopy = None
-        self._collapsedCopyArgs = None
+        self._collapsedCopyMissingArgs = None
         for i in args:
             self.add(i)
 
@@ -38,7 +38,6 @@ class Block(object):
         if which in self._inputBlocks.keys() and not self._inputBlocks[which] is None:
             raise Exception('This slot if already filled. Remove the block there first')
         self._inputBlocks[which] = block
-        block._outputBlock = self
         self.clearCache()
 
     def remove(self, which):
@@ -52,9 +51,8 @@ class Block(object):
             raise Exception('Tried to remove argument from invalid slot')
 
     def clearCache(self):
-        self._value = None
         self._collapsedCopy = None
-        self._collapsedCopyArgs = None
+        self._collapsedCopyMissingArgs = None
 
     def getValue(self):
         return self._value
@@ -85,6 +83,7 @@ class Block(object):
     
     def foldFunc(self):
         self._func.fold()
+        self.clearCache()
         for block in self._inputBlocks.values():
             if not block is None:
                 block.foldFunc()
@@ -150,7 +149,7 @@ class Block(object):
 
     def collapse(self):
         missingArgs = self.missingArgs()
-        if not self._collapsedCopy is None and self._collapsedCopyArgs == missingArgs:
+        if not self._collapsedCopy is None and self._collapsedCopyMissingArgs == missingArgs:
             return self._collapsedCopy
         parentsCollapsed = {k: v.collapse() for k,v in self._inputBlocks.items() if not v is None}
         parentsMissingArgs = {k: parent.missingArgs() for k, parent in parentsCollapsed.items()}
