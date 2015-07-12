@@ -1,6 +1,6 @@
 from Closure import Closure
 
-TYPES = {'INT': int, 'STR': str, 'BOOL': bool, 'LIST': list, 'SET': set, 'DICT': dict, 'ARG': 'argument', 'NONE': None, 'ANY': 'any'}
+TYPES = {'INT': int, 'FLOAT': float, 'STR': str, 'BOOL': bool, 'LIST': list, 'SET': set, 'DICT': dict, 'ARG': 'argument', 'NONE': None, 'ANY': 'any'}
 
 class Block(object):
     _func = lambda: None
