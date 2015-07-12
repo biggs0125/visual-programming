@@ -6,15 +6,32 @@ from models import Block
 class BlocksViewSet(viewsets.ModelViewSet):
 
     queryset = Block.objects.all()
+
+    def create(self, request):
+        obj = Block.createBlock(request.data['blockType'])
+        return Response(obj.id)
+
+    @detail_route(methods=['post'])
+    def remove(self, request, pk=None):
+        obj = self.get_object()
+        block = obj.getBlock()
+        slot = request.data['slot']
+        block.remove(int(slot))
+        obj.saveBlock(block)
+        return Response('SUCCESS')
     
     @detail_route(methods=['post'])
     def add(self, request, pk=None):
-        obj = Block.objects.get(pk=pk)
+        obj = self.get_object()
         block = obj.getBlock()
+        slot = request.data['slot']
         toAdd = request.data['toAdd']
         if not block._isInput:
             toAdd = Block.objects.get(pk=toAdd).getBlock()
-        block.add(toAdd)
+        if slot is None:
+            block.add(toAdd)
+        else:
+            block.add(toAdd, int(slot))
         obj.saveBlock(block)
         return Response('SUCCESS')
         
@@ -31,9 +48,3 @@ class BlocksViewSet(viewsets.ModelViewSet):
         newBlock = block.collapse()
         newObj = Block.collapseBlock(newBlock)
         return Response(newObj.id)
-    
-    def create(self, request):
-        obj = Block.createBlock(request.data['blockType'])
-        return Response(obj.id)
-
-# Create your views here.

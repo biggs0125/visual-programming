@@ -31,4 +31,3 @@ class Block(models.Model):
         blockObj = cls(blockStr=cPickle.dumps(block))
         blockObj.save()
         return blockObj
-        
