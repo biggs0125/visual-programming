@@ -108,3 +108,39 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+PIPELINE_COMPILERS = (
+    'react.utils.pipeline.JSXCompiler',
+    'pipeline.compilers.sass.SASSCompiler',
+    'pipeline.compilers.es6.ES6Compiler',
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
+PIPELINE_CSS_COMPRESSOR = None
+
+PIPELINE_JS_COMPRESSOR = None
+
+PIPELINE_JS = {
+    'react': {
+        'source_filenames': (
+            'js/react.min.js',),
+        'output_filename': 'js/r.js',
+    },
+    'jquery': {
+        'source_filenames': (
+            'js/jquery.js',
+        ),
+        'output_filename': 'js/jq.js',
+    },
+}
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+
+STATIC_ROOT = BASE_DIR + '/static/'
+
+STATIC_URL = '/static/'
