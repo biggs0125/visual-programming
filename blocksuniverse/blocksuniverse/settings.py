@@ -121,18 +121,30 @@ STATICFILES_FINDERS = (
     'pipeline.finders.PipelineFinder',
 )
 
+PIPELINE_CSS = {
+    'workbench': {
+        'source_filenames' : (
+            'workbench/css/*',
+        ),
+        'output_filename': 'css/workbench.css',
+    }
+}
+
 PIPELINE_JS = {
     'workbench': {
         'source_filenames': (
-            'react.js',
-            'jquery.js',
-            'workbench.jsx',
+            'workbench/js/react.js',
+            'workbench/js/jquery.js',
+            'workbench/js/jquery-ui.min.js',
+            'workbench/js/workbench.jsx',
+            'workbench/js/block.jsx',
+            'workbench/js/app.jsx',
         ),
         'output_filename': 'js/workbench.js',
     }
 }
 
-STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 
 STATIC_ROOT = BASE_DIR + '/staticfiles/'
 
