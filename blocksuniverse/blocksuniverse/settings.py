@@ -38,7 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'pipeline',
     'blocks',
+    'workbench',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -101,8 +103,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSIONS_ACCESS': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
@@ -110,9 +110,9 @@ REST_FRAMEWORK = {
 }
 
 PIPELINE_COMPILERS = (
+    'pipeline.compilers.es6.ES6Compiler',
     'react.utils.pipeline.JSXCompiler',
     'pipeline.compilers.sass.SASSCompiler',
-    'pipeline.compilers.es6.ES6Compiler',
 )
 
 STATICFILES_FINDERS = (
@@ -121,26 +121,19 @@ STATICFILES_FINDERS = (
     'pipeline.finders.PipelineFinder',
 )
 
-PIPELINE_CSS_COMPRESSOR = None
-
-PIPELINE_JS_COMPRESSOR = None
-
 PIPELINE_JS = {
-    'react': {
+    'workbench': {
         'source_filenames': (
-            'js/react.min.js',),
-        'output_filename': 'js/r.js',
-    },
-    'jquery': {
-        'source_filenames': (
-            'js/jquery.js',
+            'react.js',
+            'jquery.js',
+            'workbench.jsx',
         ),
-        'output_filename': 'js/jq.js',
-    },
+        'output_filename': 'js/workbench.js',
+    }
 }
 
 STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 
-STATIC_ROOT = BASE_DIR + '/static/'
+STATIC_ROOT = BASE_DIR + '/staticfiles/'
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
