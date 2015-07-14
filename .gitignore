@@ -1,3 +1,4 @@
 *~
 *.pyc
 blocksuniverse/staticfiles
+db.sqlite3

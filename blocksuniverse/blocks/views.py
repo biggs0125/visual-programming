@@ -13,7 +13,7 @@ class BlocksViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'])
     def remove(self, request, pk=None):
-        obj = self.get_object()
+        obj = Block.objects.get(pk=pk)
         block = obj.getBlock()
         slot = request.data['slot']
         block.remove(int(slot))
@@ -22,7 +22,7 @@ class BlocksViewSet(viewsets.ModelViewSet):
     
     @detail_route(methods=['post'])
     def add(self, request, pk=None):
-        obj = Block.objects.get(pk=pk)#self.get_object()
+        obj = Block.objects.get(pk=pk)
         block = obj.getBlock()
         slot = None
         if 'slot' in request.data:
