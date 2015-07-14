@@ -19,7 +19,7 @@ class BlocksViewSet(viewsets.ModelViewSet):
         block.remove(int(slot))
         obj.saveBlock(block)
         return Response('SUCCESS')
-    
+
     @detail_route(methods=['post'])
     def add(self, request, pk=None):
         obj = Block.objects.get(pk=pk)#self.get_object()
@@ -30,17 +30,21 @@ class BlocksViewSet(viewsets.ModelViewSet):
         toAdd = request.data['toAdd']
         if not block._isInput:
             toAdd = Block.objects.get(pk=toAdd).getBlock()
+            addType = block.getInputType(slot)
+            # Check that block type matches up
+            if (toAdd.getOutputType() != addType):
+                return Response('FAILURE')
         if slot is None:
             block.add(toAdd)
         else:
             block.add(toAdd, int(slot))
         obj.saveBlock(block)
         return Response('SUCCESS')
-        
+
 
     @detail_route(methods=['get'])
     def evaluate(self, request, pk=None):
-        block = self.get_object().getBlock()
+        block = Block.objects.get(pk=pk).getBlock()
         result = block.evaluate()
         return Response(result)
 

@@ -9,6 +9,6 @@ MAPPING = {
     'MINUS': MinusBlock,
     'MULT': MultBlock,
     'DIV': DivBlock,
-    'INT': IntBlock
+    'INT': IntBlock,
+    'STR': StringBlock,
 }
-  

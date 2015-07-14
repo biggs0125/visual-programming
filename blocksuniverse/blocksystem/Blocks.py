@@ -7,7 +7,7 @@ class Block(object):
     _inputTypes = {}
     _outputType = None
     _isInput = False
-    
+
     def __init__(self, *args, **kwargs):
         if 'name' in kwargs:
             self._name = kwargs['name']
@@ -34,7 +34,7 @@ class Block(object):
             raise Exception('Tried to add argument to invalid slot')
         if not self._inputTypes[which] == block.getOutputType() and not (block.getOutputType() == 'ARG' \
         or self._inputTypes[which] == 'ANY' or block.getOutputType() == 'ANY' or self._inputTypes[which] == 'FUNC'):
-            raise Exception("Incorrect type: Expected block with return type {expected} but got block with return type {actual}".format(expected=self._inputTypes[which], 
+            raise Exception("Incorrect type: Expected block with return type {expected} but got block with return type {actual}".format(expected=self._inputTypes[which],
                                                                                                                                         actual=block.getOutputType()))
         if which in self._inputBlocks.keys() and not self._inputBlocks[which] is None:
             raise Exception('This slot if already filled. Remove the block there first')
@@ -62,14 +62,13 @@ class Block(object):
         return [k for k in self._inputTypes.keys() if not k in self._inputBlocks or self._inputBlocks[k] is None]
 
     def chunkMissingArgs(self):
-        return self.missingArgs() or any([i.chunkMissingArgs() for i in self._inputBlocks.values() if not i is None]) 
+        return self.missingArgs() or any([i.chunkMissingArgs() for i in self._inputBlocks.values() if not i is None])
 
     def getType(self):
         types = []
         for k in self._inputTypes:
             types.add(self._inputTypes[k])
         return types
-
     def getName(self):
         return self._name
 
@@ -81,17 +80,23 @@ class Block(object):
 
     def getFunction(self):
         return self._func
-    
+
     def foldFunc(self):
         self._func.fold()
         self.clearCache()
         for block in self._inputBlocks.values():
             if not block is None:
                 block.foldFunc()
-                
+
     def unfoldFunc(self):
         self._func.unfold()
-
+    # If slot is an index, returns the input type at the given
+    # slot. Otherwise, returns the next default input type, when
+    # which isn't specified.
+    def getInputType(self, slot):
+        if slot is None:
+            return self._inputTypes[len(self._inputBlocks)]
+        return self._inputTypes[slot]
     def evaluate(self, collapse=False):
         if collapse:
             collapsed = self.collapse()
@@ -168,7 +173,7 @@ class InputBlock(Block):
     _type = 'ARG'
     _func = lambda self: self._value
     _isInput = True
-    
+
     def __init__(self, *args, **kwargs):
         self._outputType = 'ARG'
         self._func = Closure(self._func, self)
