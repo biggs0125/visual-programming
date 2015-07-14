@@ -37,6 +37,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'pipeline',
+    'blocks',
+    'workbench',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -99,4 +103,49 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSIONS_ACCESS': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+PIPELINE_COMPILERS = (
+    'pipeline.compilers.es6.ES6Compiler',
+    'react.utils.pipeline.JSXCompiler',
+    'pipeline.compilers.sass.SASSCompiler',
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
+PIPELINE_CSS = {
+    'workbench': {
+        'source_filenames' : (
+            'workbench/css/*',
+        ),
+        'output_filename': 'css/workbench.css',
+    }
+}
+
+PIPELINE_JS = {
+    'workbench': {
+        'source_filenames': (
+            'workbench/js/react.js',
+            'workbench/js/jquery.js',
+            'workbench/js/jquery-ui.min.js',
+            'workbench/js/workbench.jsx',
+            'workbench/js/block.jsx',
+            'workbench/js/app.jsx',
+        ),
+        'output_filename': 'js/workbench.js',
+    }
+}
+
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+
+STATIC_ROOT = BASE_DIR + '/staticfiles/'
+
+STATIC_URL = '/staticfiles/'
