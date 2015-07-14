@@ -22,9 +22,11 @@ class BlocksViewSet(viewsets.ModelViewSet):
     
     @detail_route(methods=['post'])
     def add(self, request, pk=None):
-        obj = self.get_object()
+        obj = Block.objects.get(pk=pk)#self.get_object()
         block = obj.getBlock()
-        slot = request.data['slot']
+        slot = None
+        if 'slot' in request.data:
+            slot = request.data['slot']
         toAdd = request.data['toAdd']
         if not block._isInput:
             toAdd = Block.objects.get(pk=toAdd).getBlock()
