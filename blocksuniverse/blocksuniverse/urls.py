@@ -16,7 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from rest_framework import routers
 from blocks.views import BlocksViewSet
+from workbench.views import WorkbenchView
 
 router = routers.SimpleRouter()
 router.register(r'blocks', BlocksViewSet)
-urlpatterns = tuple(router.urls)
+urlpatterns = (
+    url(r'^$', WorkbenchView.as_view()),
+) + tuple(router.urls)

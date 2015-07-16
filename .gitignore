@@ -1,4 +1,5 @@
 *~
 *.pyc
-blocksuniverse/staticfiles
+blocksuniverse/static
 db.sqlite3
+blocksuniverse/frontend/node_modules

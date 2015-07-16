@@ -38,8 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'pipeline',
     'blocks',
+    'workbench'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -84,6 +84,10 @@ DATABASES = {
     }
 }
 
+STATICFILES_FINDER = ("django.contrib.staticfiles.finders.FileSystemFinder",
+                      "django.contrib.staticfiles.finders.AppDirectoriesFinder")
+
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -108,6 +112,11 @@ REST_FRAMEWORK = {
     )
 }
 
-STATIC_ROOT = BASE_DIR + '/staticfiles/'
+if DEBUG:
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+else:
+    STATIC_ROOT = BASE_DIR + '/static/'
 
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
+
+
