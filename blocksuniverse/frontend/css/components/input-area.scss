@@ -1,0 +1,55 @@
+$int: green;
+$string: blue;
+$bool: red;
+
+$input-area-height: 30px;
+
+.input-area {
+  position: absolute;
+  top: -($input-area-height + $stem-height + 2px);
+  width: $block-width;
+  height: $input-area-height;
+  border-style: solid;
+  border-width: 1px;
+  overflow: scroll;
+  white-space: nowrap;
+}
+
+%input-slot--default {
+  display: inline-block;
+}
+
+.input-slot--int {
+  @extend %input-slot--default;
+  border-color: $int;
+}
+
+.input-slot--string {
+  @extend %input-slot--default;
+  border-color: $string;
+}
+
+.input-slot--bool {
+  @extend %input-slot--default;
+  border-color: $bool;
+}
+
+.input-slot-wall {
+  border-style: solid;
+  border-width: 1px;
+  width: 24px;
+  height: 0px;
+  display: inline-block;;
+  position: relative;
+  bottom: 4px;
+  border-color: inherit;
+}
+
+.left-wall {
+  transform: rotate(45deg);
+}
+
+.right-wall {
+  transform: rotate(-45deg);
+  right: 8px;
+}

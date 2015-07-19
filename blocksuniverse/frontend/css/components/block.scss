@@ -1,0 +1,19 @@
+$stem-height: 40px;
+$block-width: 200px;
+
+.block-wrapper {
+  border-style: solid;
+  border-width: 2px;
+  width: $block-width;
+  height: 200px;
+}
+
+.block-stem {
+  border-style: solid;
+  border-width: 1px;
+  width: 0px;
+  height: $stem-height;
+  position: absolute;
+  top: -($stem-height + 2px);
+  left: 100px;
+}

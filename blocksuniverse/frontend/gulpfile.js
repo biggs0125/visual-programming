@@ -28,7 +28,7 @@ const APP_JS_CONFIG = {
   src: './js/app.jsx',
   target: 'app.js',
   targetDir: '../static/js/'
-}
+};
 
 const VENDOR_CONFIG = {
   src: [
@@ -36,13 +36,14 @@ const VENDOR_CONFIG = {
     //'eventemitter3',
     'react',
     'react-mini-router',
-    'react-highcharts',
     'immutable',
     'immstruct',
     'omniscient',
     'lodash',
     'bluebird',
-    'moment'
+    'moment',
+    'jquery',
+    'jquery-ui'
   ],
   target: 'vendor.js',
   targetDir: '../static/js/'
@@ -52,7 +53,7 @@ const VENDOR_CONFIG = {
 const BROWSERIFY_OPTIONS = {
   debug: true,
   extensions: ['.js', '.jsx']
-}
+};
 
 
 //
@@ -68,14 +69,14 @@ function logBundle(filename, watching) {
     if (!watching) {
       gutil.log(filename + ' ' + bytesToKB(buf.length) + ' KB written');
     }
-  }
+  };
 }
 
 function logWatch(filename) {
   return function(msg) {
     msg = msg.replace(/(\d+)\ bytes/, function(match, bytes) { return bytesToKB(bytes) + ' KB'; });
     gutil.log(filename + ' ' + msg);
-  }
+  };
 }
 
 function logFileChange(filename) {
@@ -158,7 +159,7 @@ gulp.task('build-css', function() {
     // @TODO get logVinylFile working again so we can see size of output file
     //.pipe(logVinylFile)
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('../static/css/'))
+    .pipe(gulp.dest('../static/css/'));
 });
 
 gulp.task('watch-css', ['build-css'], function(done) {
@@ -172,7 +173,7 @@ gulp.task('watch-css', ['build-css'], function(done) {
       console.log(file);
       gulp.start('build-css');
     }
-  )
+  );
 });
 
 

@@ -1,11 +1,9 @@
 {
-  "name": "bbt2",
+  "name": "blocksuniverse",
   "version": "1.0.0",
   "dependencies": {
     "babel-eslint": "^3.0.1",
     "babelify": "^5.0.4",
-    "backbone": "1.1.2",
-    "backbone.marionette": "2.4.1",
     "browserify": "^7.0.0",
     "browserify-shim": "^3.0.0",
     "browserify-swap": "git://github.com/nibblebot/browserify-swap.git#290024b97890c169ead1a2b17e8d6112d21b2c6e",
@@ -28,18 +26,18 @@
     "gulp-util": "^2.2.17",
     "gulp-watch": "^4.2.4",
     "immstruct": "^1.4.1",
+    "jquery": "^2.1.4",
+    "jquery-ui": "^1.10.5",
     "lazypipe": "^0.2.1",
     "lodash": "2.4.1",
     "moment": "^2.6.0",
     "omniscient": "^3.1.0",
     "react": "^0.13.0",
-    "react-highcharts": "0.0.9",
     "react-mini-router": "^1.1.5",
     "susy": "^2.2.3",
     "through2": "^0.6.2",
     "vinyl-source-stream": "^0.1.1",
-    "watchify": "2.2.1",
-    "zeroclipboard": "2.1.5"
+    "watchify": "2.2.1"
   },
   "browser": {
     "bluebird": "./js/vendor/bluebird.js",
