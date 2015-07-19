@@ -6,6 +6,7 @@ import $ from 'jquery';
 import {draggable} from 'jquery-ui'
 
 import InputArea from './InputArea.jsx';
+import OutputSlot from './OutputSlot.jsx';
 
 const BlockHelpers = {
   componentDidMount() {
@@ -16,9 +17,12 @@ const BlockHelpers = {
 const Block = component('Block', BlockHelpers, function() {
   return (
     <div className='block-wrapper'>
-      <div className='block-stem'>
+      <div className='block-body'>
+        <div className='block-stem'>
+        </div>
+        <InputArea types={['INT', 'STRING', 'BOOL', 'STRING', 'INT']}/>
+        <OutputSlot type={'STRING'}/>
       </div>
-      <InputArea types={['int', 'string', 'bool', 'string', 'int']}/>
     </div>
   );
 });

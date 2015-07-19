@@ -9,6 +9,7 @@ const Workbench = component('Workbench', function() {
   return (
     <div>
       <Block/>
+      <Block/>  
     </div>
   );
 });

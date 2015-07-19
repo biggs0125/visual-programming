@@ -1,40 +1,51 @@
-$int: green;
-$string: blue;
-$bool: red;
-
-$input-area-height: 30px;
 
 .input-area {
   position: absolute;
-  top: -($input-area-height + $stem-height + 2px);
+  top: -($input-area-height + $stem-height + 4px);
   width: $block-width;
   height: $input-area-height;
   border-style: solid;
   border-width: 1px;
   overflow: scroll;
   white-space: nowrap;
+  background-color: $background-color;
 }
 
-%input-slot--default {
+.output-slot {
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 52px;
+}
+
+.slot-snap-helper {
+  width: 24px;
+  height: 8px;
+  position: absolute;
+}
+  
+%slot--default {
   display: inline-block;
 }
 
-.input-slot--int {
-  @extend %input-slot--default;
+.slot--INT {
+  @extend %slot--default;
   border-color: $int;
 }
 
-.input-slot--string {
-  @extend %input-slot--default;
+.slot--STRING {
+  @extend %slot--default;
   border-color: $string;
 }
 
-.input-slot--bool {
-  @extend %input-slot--default;
+.slot--BOOL {
+  @extend %slot--default;
   border-color: $bool;
 }
 
-.input-slot-wall {
+%slot-wall {
   border-style: solid;
   border-width: 1px;
   width: 24px;
@@ -43,6 +54,15 @@ $input-area-height: 30px;
   position: relative;
   bottom: 4px;
   border-color: inherit;
+}
+
+.input-slot-wall {
+  @extend %slot-wall;
+}
+
+.output-slot-wall {
+  @extend %slot-wall;
+  bottom: -8px;
 }
 
 .left-wall {
