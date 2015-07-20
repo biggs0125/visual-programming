@@ -1,8 +1,8 @@
 from Blocks import FunctionBlock
 
 class UnaryMathBlock(FunctionBlock):
-    _inputTypes = {0: 'INT'}
-    _outputType = 'INT'
+    _inputTypes = {0: IntType()}
+    _outputType = IntType()
 
 class IncrementBlock(UnaryMathBlock):
     _func = staticmethod(lambda value: value + 1)
@@ -11,8 +11,8 @@ class DecrementBlock(UnaryMathBlock):
     _func = staticmethod(lambda value: value - 1)
 
 class BinaryMathBlock(FunctionBlock):
-    _inputTypes = {0: 'INT', 1: 'INT'}
-    _outputType = 'INT'
+    _inputTypes = {0: IntType(), 1: IntType()}
+    _outputType = IntType()
     _func = staticmethod(lambda value1, value2: None)
 
 class PlusBlock(BinaryMathBlock):

@@ -177,13 +177,14 @@ class InputBlock(Block):
     def __init__(self, *args, **kwargs):
         self._outputType = 'ARG'
         self._func = Closure(self._func, self)
+        # Todo: Make typing mandatory
         if 'argType' in kwargs.keys():
-            self._type = kwargs['argType']
+            self._type = Types.getTypeFromStr(kwargs['argType'])
         super(InputBlock, self).__init__(*args, **kwargs)
 
     def add(self, value):
         try:
-            value = TYPES[self._type](value)
+            value = self._type.tycon(value)
             self._value = value
             self._outputType = self._type
         except:
@@ -194,6 +195,6 @@ class FunctionBlock(Block):
 
     def __init__(self, *args, **kwargs):
         if 'outputType' in kwargs.keys():
-            self.outputType = kwargs['outputType']
+            self.outputType = Types.getTypeFromStr(kwargs['outputType'])
         super(FunctionBlock, self).__init__(*args, **kwargs)
         self._func = Closure(self._func)

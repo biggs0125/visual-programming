@@ -1,13 +1,16 @@
 from Blocks import InputBlock
-
+from Types import *
 class IntBlock(InputBlock):
-    _type = 'INT'
+    _type = IntType()
 
 class StringBlock(InputBlock):
-    _type = 'STR'
+    _type = StrType()
 
 class BoolBlock(InputBlock):
-    _type = 'BOOL'
+    _type = BoolType()
 
+# Right now, list(str) = list(int).
+# TODO: Change constructor so that listblock has an init function that
+# sets this type.
 class ListBlock(InputBlock):
-    _type = 'LIST'
+    _type = ListType(BaseType())
