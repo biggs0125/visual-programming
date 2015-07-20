@@ -2,13 +2,15 @@
 
 import React from 'react';
 import immstruct from 'immstruct';
+import Immutable from 'immutable';
 import {RouterMixin} from 'react-mini-router';
 import component from './util/component.js';
 
 import Workbench from './components/Workbench.jsx';
 
 const State = immstruct('app', {
-  blocks: null
+  blocks: null,
+  inputLocations: Immutable.OrderedMap()
 });
 
 const AppRoutesMixin = {
@@ -17,7 +19,7 @@ const AppRoutesMixin = {
   },
   workbench() {
     return (
-      <Workbench/>
+      <Workbench inputLocations={State.reference('inputLocations')}/>
     );
   },
   notFound(path) {

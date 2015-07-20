@@ -1,7 +1,8 @@
 .block-wrapper {
   height: $stem-height + $block-height + $input-area-height + 6px;
-  width: $block-width;
+  width: $block-width + 4px;
   display: inline-block;
+  position: absolute;
 }
 
 .block-body {

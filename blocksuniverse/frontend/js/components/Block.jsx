@@ -9,19 +9,34 @@ import InputArea from './InputArea.jsx';
 import OutputSlot from './OutputSlot.jsx';
 
 const BlockHelpers = {
+    
+  updateLocation() {
+    const left = React.findDOMNode(this).style.left;
+    const top = React.findDOMNode(this).style.top;
+    this.props.inputLocations.cursor().update((state) => {
+      return state.set(this.slotKey, {top: top, left: left});
+    });
+  },
+  
   componentDidMount() {
-    $(React.findDOMNode(this)).draggable();
+    this.slotKey = this.props.inputLocations.cursor().deref().size;
+    $(React.findDOMNode(this)).draggable({
+      drag: () => {
+        this.updateLocation();
+      }
+    });
+    this.updateLocation();
   }
 }
 
-const Block = component('Block', BlockHelpers, function() {
+const Block = component('Block', BlockHelpers, function({inputTypes, outputType, inputLocations}) {
   return (
     <div className='block-wrapper'>
       <div className='block-body'>
         <div className='block-stem'>
         </div>
-        <InputArea types={['INT', 'STRING', 'BOOL', 'STRING', 'INT']}/>
-        <OutputSlot type={'STRING'}/>
+        <InputArea types={inputTypes}/>
+        <OutputSlot type={outputType}/>
       </div>
     </div>
   );
