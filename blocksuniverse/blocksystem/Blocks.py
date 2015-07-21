@@ -1,5 +1,5 @@
 from Closure import Closure
-
+from Types import *
 TYPES = {'INT': int, 'STR': str, 'BOOL': bool, 'LIST': list, 'SET': set, 'DICT': dict, 'ARG': 'argument', 'NONE': None, 'ANY': 'any'}
 
 class Block(object):
@@ -32,8 +32,11 @@ class Block(object):
             return
         if not which in self._inputTypes.keys():
             raise Exception('Tried to add argument to invalid slot')
-        if not self._inputTypes[which] == block.getOutputType() and not (block.getOutputType() == 'ARG' \
-        or self._inputTypes[which] == 'ANY' or block.getOutputType() == 'ANY' or self._inputTypes[which] == 'FUNC'):
+        if not (self._inputTypes[which].matches(block.getOutputType())\
+                and not (block.getOutputType() == 'ARG'))\
+            or self._inputTypes[which].matches(BaseType())\
+            or block.getOutputType().matches(BaseType())\
+            or self._inputTypes[which] == 'FUNC':
             raise Exception("Incorrect type: Expected block with return type {expected} but got block with return type {actual}".format(expected=self._inputTypes[which],
                                                                                                                                         actual=block.getOutputType()))
         if which in self._inputBlocks.keys() and not self._inputBlocks[which] is None:
@@ -113,7 +116,7 @@ class Block(object):
                 v,t = val.evaluate(collapse=True)
             else:
                 v,t = val.evaluate()
-            if t != self._inputTypes[k] and not (t is 'ANY' or self._inputTypes[k] is 'ANY' or t is 'FUNC' or self._inputTypes[k] is 'FUNC'):
+            if not self._inputTypes[k].matches(t):
                 raise Exception("Argument type mismatch")
             values[k] = v
         self._value = self._func(*(values.values()))

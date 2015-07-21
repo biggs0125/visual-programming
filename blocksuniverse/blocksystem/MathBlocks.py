@@ -1,5 +1,5 @@
 from Blocks import FunctionBlock
-
+from Types import *
 class UnaryMathBlock(FunctionBlock):
     _inputTypes = {0: IntType()}
     _outputType = IntType()

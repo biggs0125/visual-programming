@@ -1,5 +1,5 @@
 from Blocks import FunctionBlock
-
+from Types import *
 class StringTransformBlock(FunctionBlock):
     _inputTypes = {0: StrType()}
     _outputType = StrType()
