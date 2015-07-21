@@ -36,7 +36,7 @@ class Block(object):
                 and not (block.getOutputType() == 'ARG'))\
             or self._inputTypes[which].matches(BaseType())\
             or block.getOutputType().matches(BaseType())\
-            or self._inputTypes[which] == 'FUNC':
+            or self._inputTypes[which].type == 'FUNC':
             raise Exception("Incorrect type: Expected block with return type {expected} but got block with return type {actual}".format(expected=self._inputTypes[which],
                                                                                                                                         actual=block.getOutputType()))
         if which in self._inputBlocks.keys() and not self._inputBlocks[which] is None:
@@ -103,7 +103,8 @@ class Block(object):
     def evaluate(self, collapse=False):
         if collapse:
             collapsed = self.collapse()
-            return collapsed.getFunction(), 'FUNC'
+            return collapsed.getFunction(), \
+                FunctionType(self._inputTypes.values(), self._outputType)
         if len(self.missingArgs()) != 0:
             raise Exception("Not enough arguments provided")
         # Don't repeat work if we already have a value

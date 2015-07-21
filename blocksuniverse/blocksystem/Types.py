@@ -47,7 +47,10 @@ class DictType(BaseType):
         self.type = 'DICT'
         self.paramTypes = [keyType, valType]
         self.tycon = dict
-
+class FunctionType(BaseType):
+    def __init__(self, argTypes, resType):
+        self.type = 'FUNC'
+        self.paramTypes = argTypes + [resType]
 
 def getTypeFromStr(argType):
     typedict = {
@@ -57,5 +60,6 @@ def getTypeFromStr(argType):
         "LIST": ListType(BaseType()),
         "SET": SetType(BaseType()),
         "DICT": DictType(BaseType(), BaseType()),
+        "FUNC": FunctionType(BaseType(), BaseType()),
     }
     return typedict[argType]
