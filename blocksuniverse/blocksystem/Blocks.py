@@ -33,7 +33,7 @@ class Block(object):
         if not which in self._inputTypes.keys():
             raise Exception('Tried to add argument to invalid slot')
         if not (self._inputTypes[which].matches(block.getOutputType())\
-                and not (block.getOutputType() == 'ARG'))\
+                and not (block.getOutputType().matches(BaseType())))\
             or self._inputTypes[which].matches(BaseType())\
             or block.getOutputType().matches(BaseType())\
             or self._inputTypes[which].type == 'FUNC':
@@ -174,12 +174,12 @@ class Block(object):
         return self._collapsedCopy
 
 class InputBlock(Block):
-    _type = 'ARG'
+    _type = BaseType()
     _func = lambda self: self._value
     _isInput = True
 
     def __init__(self, *args, **kwargs):
-        self._outputType = 'ARG'
+        self._outputType = BaseType()
         self._func = Closure(self._func, self)
         # Todo: Make typing mandatory
         if 'argType' in kwargs.keys():
