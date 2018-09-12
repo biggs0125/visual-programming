@@ -3,6 +3,7 @@ from MathBlocks import *
 from LogicBlocks import *
 from MiscBlocks import *
 from ListBlocks import *
+from Types import *
 import cPickle
 from Closure import Closure
 from Blocks import Block
@@ -15,10 +16,54 @@ class Tests(object):
 class AllTests(Tests):
     @staticmethod
     def runTests():
+        TypeTests.runTests()
         CollapseTests.runTests()
         LogicTests.runTests()
         ListTests.runTests()
         SerializeTests.runTests()
+
+class TypeTests(Tests):
+    @staticmethod
+    def runTests():
+        print "\n################# TYPE TESTS ###################\n"
+        print "\n############# Print Types ###############\n"
+        print StringType()
+        print IntType()
+        print BoolType()
+        print ListType(BoolType())
+        print FunctionType(IntType(), BoolType())
+        print TupleType(IntType, StringType, FunctionType(IntType(), BoolType()))
+        print DictType(StringType, IntType)
+        print TypeVar()
+        print TypeVar()
+        print "\n############# Substitute Types ###############\n"
+        tyvar = TypeVar()
+        alphaList = ListType(tyvar)
+        print alphaList
+        alphaList.substitute(tyvar, StringType())
+        print alphaList
+        alphaList.unsubstitute(TypeVar())
+        print alphaList
+        alphaList.unsubstitute(tyvar)
+        print alphaList
+        print "\n############# Running compare type tests with asserts ###############\n"
+        assert not DictType(BoolType(), IntType()) == DictType(BoolType(), StringType())
+        assert DictType(BoolType(), IntType()) == DictType(BoolType(), IntType())
+        assert DictType(BoolType(), IntType()) == DictType(TypeVar(), IntType())
+        assert DictType(BoolType(), IntType()) == DictType(TypeVar(), TypeVar())
+        assert DictType(BoolType(), TypeVar()) == DictType(TypeVar(), TypeVar())
+        alphaStringDict = DictType(tyvar, StringType())
+        assert alphaStringDict == DictType(BoolType(), StringType())
+        alphaStringDict.substitute(tyvar, IntType())
+        assert not alphaStringDict == DictType(BoolType(), StringType())
+        assert alphaStringDict == DictType(IntType(), StringType())
+        assert alphaStringDict == DictType(TypeVar(), StringType())
+        alphaStringDict.unsubstitute(tyvar)
+        assert alphaStringDict == DictType(BoolType(), StringType())
+        assert alphaStringDict == DictType(IntType(), StringType())
+        assert alphaStringDict == DictType(TypeVar(), StringType())
+        
+        
 
 class CollapseTests(Tests):
     @staticmethod
@@ -170,7 +215,7 @@ class ListTests(Tests):
 class SerializeTests(Tests):
     @staticmethod
     def runTests():
-        print "###########Serialize Tests###############"
+        print "\n################# SERIALIZE TESTS ###################\n"
         x = PlusBlock()
         a = IntBlock()
         b = IntBlock()
