@@ -49,7 +49,7 @@ class TypeVar(Type):
         return self._subbedType == otherType
 
     def substitute(self, typeVar, newType):
-        if typeVar._id == self._id:
+        if typeVar._id == self._id and not self._subbedType is None:
             self._subbedType = newType
             self._formatStr = newType._formatStr
 

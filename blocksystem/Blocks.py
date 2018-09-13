@@ -22,7 +22,10 @@ class Block(object):
         return self
 
     def getOutputType(self):
-        self._type
+        return self._type
+        
+    def getType(self):
+        return self._type
 
 class FunctionBlock(Block):
     def __init__(self, type, *args):
@@ -33,14 +36,22 @@ class FunctionBlock(Block):
     def addArg(self, arg, argNumber):
         if argNumber >= arity or argNumber < 0:
             raise Exception('Cannot add arg to out of bounds slot.')
-        inputType = self._type.getInputTypes()[argNumber]
+
+        inputType = self.getType().getInputTypes()[argNumber]
+        argOutputType = arg.getOutputType()
+
         # Make sure the type of the arg matches the expected arg type
-        if not inputType == arg.getOutputType():
+        if not inputType == argOutputType:
             return False
+
         self._args[argNumber] = arg
-        # Check to see if the arg is a typevar and substitute if it is
+
+        # Check to see if the arg slot is a typevar and substitute if it is
         if inputType.KEY == TypeVar.KEY and not inputType.isSubstituted():
-            self._type.substitute(inputType, arg.getOutputType())
+            self.getType().substitute(inputType, argOutputType)
+        # Check to see if the arg outputs a typevar and substitute for it if it is
+        if argOutputType.KEY == TypeVar.KEY and not argOutputType.isSubstituted():
+            arg.getType().substitute(argOutputType, argInputType)
         return True
     
     def removeArg(self, argNumber):
