@@ -1,4 +1,4 @@
-class Type():
+class Type(object):
     _name = ""
     _arity = 0
     _formatStr = None
@@ -37,7 +37,7 @@ class TypeVar(Type):
     _name = "TyVar"
     _id = 0
     KEY = "TYVAR"
-    
+
     def __init__(self):
         self.__class__._id += 1
         self._id = self.__class__._id
@@ -47,7 +47,7 @@ class TypeVar(Type):
         if self._subbedType is None:
             return True
         return self._subbedType == otherType
-    
+
     def substitute(self, typeVar, newType):
         if typeVar._id == self._id:
             self._subbedType = newType
@@ -57,13 +57,16 @@ class TypeVar(Type):
         if typeVar._id == self._id:
             self._subbedType = None
             self._formatStr = None
-    
+
+    def isSubstituted(self):
+        return not self._subbedType is None
+
     def __str__(self):
         if self._subbedType:
             return str(self._subbedType)
         return "TYVAR_{id}".format(id=self._id)
-        
-    
+
+
 class IntType(Type):
     _arity = 0
     _name = "int"
@@ -84,17 +87,28 @@ class TupleType(Type):
 
     def __init__(self, *args):
         self._arity = len(args)
-        if self._arity > 10:
-            raise Exception('Tuples must have less than 10 elements.')
-        self._typeArgs = args
         self._formatStr = "(" + ", ".join(["{" + str(i) + "}" for i in range(self._arity)]) + ")"
+        super(TupleType, self).__init__(*args)
 
 class FunctionType(Type):
-    _arity = 2
     _name = "Function"
     _formatStr = "{0} -> {1}"
     KEY = "FUNC"
+
+    def __init__(self, *args):
+        if len(args) < 2:
+            raise Exception('Functions must have at least 2 argument types')
+        self._arity = len(args)
+        inputsStr = ["{" + str(i) + "}" for i in range(self._arity-1)]
+        self._formatStr = "(" + ", ".join(inputsStr) + ") -> {" + str(self._arity-1) + "}"
+        super(FunctionType, self).__init__(*args)
+        
+    def getOutputType(self):
+        return self._typeArgs[-1]
     
+    def getInputTypes(self):
+        return self._typeArgs[:-1]
+
 class ListType(Type):
     _arity = 1
     _name = "List"

@@ -31,9 +31,10 @@ class TypeTests(Tests):
         print IntType()
         print BoolType()
         print ListType(BoolType())
+        print TupleType(IntType(), StringType(), BoolType())
+        print TupleType(IntType(), StringType(), FunctionType(IntType(), BoolType()))
         print FunctionType(IntType(), BoolType())
-        print TupleType(IntType, StringType, FunctionType(IntType(), BoolType()))
-        print DictType(StringType, IntType)
+        print DictType(StringType(), IntType())
         print TypeVar()
         print TypeVar()
         print "\n############# Substitute Types ###############\n"
